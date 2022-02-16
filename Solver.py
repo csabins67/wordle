@@ -26,14 +26,13 @@ class Solver:
         self.best_guess = "tares"#find_best(self.wordlist)
 
     def next(self, guess, resultant_pattern):
-        self.wordlist = filter(lambda word : Matcher.match(word, guess) == resultant_pattern, self.wordlist)
+        self.wordlist = list(filter(lambda word : Matcher.match(word, guess) == resultant_pattern, self.wordlist))
         self.best_guess = find_best(self.wordlist)
 
 
 # To get maximum possible information from each guess, the information entropy of each word in the current wordlist is calculated.
 # For each word, the frequency of every resulting match pattern from every other word are put into a list
 # The entropy is then calculated with the help of the above table.
-
 def find_best(wordlist):
     import numpy as np
     wordlist = np.asarray([[(ord(c) - 97) for c in word] for word in wordlist])
@@ -42,17 +41,17 @@ def find_best(wordlist):
     best_total_entropy = 0
 
     def total_entropy(pattern_frequency_list):
-        reduce(lambda frq1, frq2: frq1 + entropy_table[frq2], pattern_frequency_list, 0)
+        return reduce(lambda frq1, frq2: frq1 + entropy_table[frq2], pattern_frequency_list, 0)
 
     def entropies():
         for guess in wordlist:
             pattern_frequency_list = [0] * 5000
             for pattern in Matcher.get_match_list(guess, tree, len(wordlist)):
                 pattern_frequency_list[pattern] += 1
-            #e = total_entropy(pattern_frequency_list)
-            yield guess, reduce(lambda frq1, frq2: frq1 + entropy_table[frq2], pattern_frequency_list, 0)
+            e = total_entropy(pattern_frequency_list)
+            yield guess, e
 
-    for guess, entropy, in time_loop(entropies(), 50):
+    for guess, entropy, in entropies():
         if entropy > best_total_entropy:
             best_word = guess
             best_total_entropy = entropy

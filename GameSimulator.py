@@ -40,7 +40,7 @@ def pad_left(sequence, size, element):
 class AI(Player):
     def __init__(self):
         self.solver = Solver(wordlist)
-        super().__init__(lambda : self.solver.best_guess,
+        super().__init__(lambda :  self.solver.best_guess,
                        lambda feedback : self.solver.next(self.solver.best_guess, feedback))
 
 #Player inputs to the program the feedback from an actual game
@@ -62,6 +62,19 @@ def string_as_ternary(seq):
         total += int(c)
         total *= 3
     return total
+
+
+#def add_complications(pattern, word, guess):
+
+
+def remove_complications(pattern, guess):
+    for i in range(len(pattern)):
+        if pattern[i] == 1:
+            letter = guess[i]
+            for j in range(len(guess)):
+                if guess[i] == letter:
+                    pattern[i] = 1
+    return pattern
 
 #Computer simulation of game
 class CCGame(Game):
@@ -103,12 +116,13 @@ def ProbeSimulation(secret):
     c = Configuration(AI(), CCGame.with_secret(secret))
     c.run()
 
-def Practice():
-    c = Configuration(Human_Player(True), CCGame.without_secret())
+def Practice(with_help):
+    c = Configuration(Human_Player(with_help), CCGame.without_secret())
     c.run()
 
 def Cheat():
     c = Configuration(Human_Player(True), PCGame())
+    c.run()
 
 
 
