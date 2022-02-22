@@ -1,4 +1,4 @@
-# This file is apart from the main program, intended only to use the solver to calculate the best potential starting words
+# This file is apart from the main program, intended to use the solver to calculate the best potential starting words
 # beforehand, as calculating vast quantities of information beforehand and storing it in the name of efficiency seems to be
 # a common theme here.
 import Solver
@@ -23,7 +23,6 @@ def level_two():
         yield solver.best_guess
 
 #Solver.find_best(wordlist)
-
 
 for guess in level_two():
     if guess == "":

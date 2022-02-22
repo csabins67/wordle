@@ -1,6 +1,6 @@
 import math
 from functools import reduce
-
+from files import level2list
 import Matcher
 
 # This procedure calculates a table of the component-entropies of every frequency p(x) where 1/n <= x/n <= n/n, x is an integral,
@@ -26,8 +26,11 @@ class Solver:
         self.best_guess = "tares"#find_best(self.wordlist)
 
     def next(self, guess, resultant_pattern):
-        self.wordlist = list(filter(lambda word : Matcher.match(word, guess) == resultant_pattern, self.wordlist))
-        self.best_guess = find_best(self.wordlist)
+        self.wordlist = list(filter(lambda word: Matcher.match(word, guess) == resultant_pattern, self.wordlist))
+        if guess == "tares":
+            self.best_guess = level2list[resultant_pattern]
+        else:
+             self.best_guess = find_best(self.wordlist)
 
 
 # To get maximum possible information from each guess, the information entropy of each word in the current wordlist is calculated.

@@ -9,6 +9,7 @@ def match(secret, guess):
     match_pattern = 0
     i = 0
     while i < 5:
+        match_pattern *= 3  # left shift match pattern
         if guess[i] != secret[i]:
             j = 0
             while j < 5:
@@ -18,9 +19,8 @@ def match(secret, guess):
                 elif j == 4:
                     match_pattern += 2
                 j += 1
-        match_pattern *= 3 #left shift match pattern
         i += 1
-    return match_pattern // 3
+    return match_pattern
 
 #matches a guess word to a secret word, returning the pattern that would result from a wordle game
 #For efficiency, the match pattern is computed as binary coded ternary.

@@ -54,27 +54,24 @@ class PCGame(Game):
 
     def check_guess(self, guess):
         pattern = input("Enter in returned pattern: 2 for grey, 1 for yellow, and 0 for green. ")
-        return string_as_ternary(pattern)
+        return string_as_ternary(remove_complications(pattern, guess))
 
 def string_as_ternary(seq):
     total = 0
-    for c in reversed(seq):
-        total += int(c)
+    for c in seq:
         total *= 3
+        total += int(c)
     return total
 
-
-#def add_complications(pattern, word, guess):
-
-
 def remove_complications(pattern, guess):
-    for i in range(len(pattern)):
-        if pattern[i] == 1:
+    out = list(pattern)
+    for i in range(len(out)):
+        if out[i] == "1":
             letter = guess[i]
             for j in range(len(guess)):
-                if guess[i] == letter:
-                    pattern[i] = 1
-    return pattern
+                if guess[j] == letter:
+                     out[j] = "1"
+    return out
 
 #Computer simulation of game
 class CCGame(Game):
@@ -111,17 +108,22 @@ class Configuration:
             feedback = self.game.check_guess(guess)
             self.times_checked += 1
             self.player.give_feedback(feedback)
+        return self.times_checked
 
 def ProbeSimulation(secret):
     c = Configuration(AI(), CCGame.with_secret(secret))
-    c.run()
+    return c.run()
 
 def Practice(with_help):
     c = Configuration(Human_Player(with_help), CCGame.without_secret())
-    c.run()
+    return c.run()
 
 def Cheat():
     c = Configuration(Human_Player(True), PCGame())
+    c.run()
+
+def Debug(secret):
+    c = Configuration(Human_Player(True), CCGame.with_secret(secret))
     c.run()
 
 
